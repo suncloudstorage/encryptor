@@ -27,9 +27,13 @@ public class EncryptService {
         SecretKeySpec aes = new SecretKeySpec(encryptPassword.getBytes(), ALGORITHM_AES);
         cipher.init(opMode, aes);
 
-        byte[] base64decodedTokenArr = Base64.decodeBase64(getBytesFromHttpEntity(httpEntity));
 
-        return cipher.doFinal(base64decodedTokenArr);
+        if  (opMode == Cipher.DECRYPT_MODE){
+            byte[] base64decodedTokenArr = Base64.decodeBase64(getBytesFromHttpEntity(httpEntity));
+            return cipher.doFinal(base64decodedTokenArr);
+        }
+
+        return cipher.doFinal(getBytesFromHttpEntity(httpEntity));
     }
 
     private byte[] getBytesFromHttpEntity(HttpEntity<byte[]> httpEntity) {
