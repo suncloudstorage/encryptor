@@ -1,5 +1,6 @@
 package com.encryptor.service;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,9 @@ public class EncryptService {
         SecretKeySpec aes = new SecretKeySpec(encryptPassword.getBytes(), ALGORITHM_AES);
         cipher.init(opMode, aes);
 
-        return cipher.doFinal(getBytesFromHttpEntity(httpEntity));
+        byte[] base64decodedTokenArr = Base64.decodeBase64(getBytesFromHttpEntity(httpEntity));
+
+        return cipher.doFinal(base64decodedTokenArr);
     }
 
     private byte[] getBytesFromHttpEntity(HttpEntity<byte[]> httpEntity) {
